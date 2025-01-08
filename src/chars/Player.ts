@@ -1,15 +1,16 @@
 import Phaser from "phaser"
+import { ArrowKeys } from "../types/keys";
 
 export class Player {
     scene: Phaser.Scene;
 
-    constructor(scene: Phaser.Scene){
+    constructor(scene: Phaser.Scene) {
         this.scene = scene;
     }
 
     private player!: Phaser.GameObjects.Container
     private playerSprite!: Phaser.GameObjects.Sprite
-    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+    private cursors!: ArrowKeys
     private playerSpeed = 2
 
     private getAnimFrames(firstFrame: number) {
@@ -27,7 +28,13 @@ export class Player {
         const AnimationManager = this.scene.anims;
         const InputPlugin = this.scene.input;
         const GameObjectFactory = this.scene.add;
-        this.cursors = InputPlugin.keyboard.createCursorKeys()
+        this.cursors = {
+            up: InputPlugin.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
+            down: InputPlugin.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
+            left: InputPlugin.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
+            right: InputPlugin.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT),
+
+        };
 
         AnimationManager.create({
             key: 'left',
@@ -118,7 +125,7 @@ export class Player {
 
         this.playerSprite.play('up')
 
-        InputPlugin.keyboard.on('keyup_1', this.Debug,this);
+        InputPlugin.keyboard.on('keyup_1', this.Debug, this);
     }
 
 
@@ -130,7 +137,7 @@ export class Player {
 
         const yLimitMin = this.playerSprite.height / 3;
         const yLimitMax = canvas.height - this.playerSprite.height / 2;
-        
+
 
         if (this.cursors.left.isDown && this.player.x > xLimitMin) {
             this.player.x -= this.playerSpeed
@@ -155,26 +162,19 @@ export class Player {
             this.playerSprite.anims.play('up', true)
         } else {
             this.playerSprite.anims.play('idle', true)
-            //this.player.anims.stop();
-        }
-
-        const keyObj = this.scene.input.keyboard.addKey('W');  // Get key object
-        const isDown = this.scene.input.keyboard.checkDown(keyObj, 100);
-        if(isDown){
-            this.Debug();
         }
     }
 
 
-    Debug(){
-        console.table({x:this.player.x, y: this.player.y, sprite: this.playerSprite.getBounds()});
+    Debug() {
+        console.table({ x: this.player.x, y: this.player.y, sprite: this.playerSprite.getBounds() });
     }
 
-    getSprite(){
+    getSprite() {
         return this.playerSprite;
     }
 
-    getCharacter(){
+    getCharacter() {
         return this.player;
     }
 }

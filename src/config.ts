@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { Plugin as NineSlicePlugin } from 'phaser3-nineslice'
 
 export default {
   type: Phaser.AUTO,
@@ -7,7 +8,10 @@ export default {
   scale: {
     width: 800,
     height: 600,
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.Center,
     autoCenter: Phaser.Scale.CENTER_BOTH
-  }
+  },
+  plugins: {
+    global: [NineSlicePlugin.DefaultCfg],
+  },
 };

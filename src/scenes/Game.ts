@@ -14,8 +14,8 @@ export default class Demo extends Phaser.Scene {
   preload() {
     this.player.Preload();
     this.canvas = this.sys.game.canvas;
-    
-    const sB = new SpeechBubble(this);
+
+    const sB = new SpeechBubble(this, 32, 256, 32, 64);
     sB.Preload();
 
     this.speechBubbles.push(sB);
@@ -23,10 +23,11 @@ export default class Demo extends Phaser.Scene {
 
   create() {
     this.player.Setup();
-    this.speechBubbles[0].Create(this.player.getCharacter(), this.player.getSprite());
+    this.speechBubbles[0].Create(this.player.getCharacter(), this.player.getSprite(), -8);
+    this.input.keyboard.removeCapture('SPACE')
   }
 
   update() {
-   this.player.Movement(this.canvas!);
+    this.player.Movement(this.canvas!);
   }
 }
