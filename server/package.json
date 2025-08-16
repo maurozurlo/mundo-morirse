@@ -1,0 +1,14 @@
+{
+  "name": "multiplayer-game-server",
+  "version": "1.0.0",
+  "description": "A simple Node.js server for a multiplayer game using WebSocket.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ws": "^8.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
