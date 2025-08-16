@@ -18,7 +18,7 @@ export class Player {
     }
 
     Preload() {
-        this.scene.load.spritesheet('playerSpritesheet', 'assets/PlayerWalk.png', {
+        this.scene.load.spritesheet('playerSpritesheet', 'assets/PlayerWalk1.png', {
             frameWidth: 16,
             frameHeight: 24,
         })

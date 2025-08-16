@@ -40,18 +40,20 @@ export class SpeechBubble {
             10
         );
         bubbleBody.setOrigin(0.5, 0.5); // Set origin to the center
+        bubbleBody.setVisible(false); // Initially hide the bubble
         Character.add(bubbleBody);
 
         // Create the arrow
         const bubbleArrow = GameObjectFactory.sprite(0, 0, 'bubbleArrow');
         bubbleArrow.setOrigin(0.5, 0); // Set origin to the top-center of the arrow
+        bubbleArrow.setVisible(false); // Initially hide the arrow
         Character.add(bubbleArrow);
 
-        // Create default text
+        // Create default empty text
         const bubbleText = GameObjectFactory.text(
             0,
             0,
-            'Hello',
+            '',
             {
                 fontSize: '12px',
                 color: '#000',
@@ -70,31 +72,64 @@ export class SpeechBubble {
         const ChatInput = document.getElementById('chatInput') as HTMLInputElement | null;
 
         ChatBtn?.addEventListener('click', () => {
-            this.updateText(ChatInput, bubbleText, bubbleBody, bubbleArrow, CharacterSprite, verticalOffset)
+            this.updateText(ChatInput, bubbleText, bubbleBody, bubbleArrow, CharacterSprite, verticalOffset);
         });
+
+        document.addEventListener('keypress', (e) => {
+            if (e.key == 't') {
+                if (document.activeElement !== ChatInput && ChatInput) {
+                    // focus element
+                    ChatInput.focus();
+                    ChatInput.value = ""
+                }
+            }
+        })
+
         // Add listener for the Enter key
         ChatInput?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                this.updateText(ChatInput, bubbleText, bubbleBody, bubbleArrow, CharacterSprite, verticalOffset)
+                this.updateText(ChatInput, bubbleText, bubbleBody, bubbleArrow, CharacterSprite, verticalOffset);
             }
+
         });
     }
 
-    updateText(ChatInput: HTMLInputElement | null,
+    updateText(
+        ChatInput: HTMLInputElement | null,
         bubbleText: Phaser.GameObjects.Text,
         bubbleBody: Phaser.GameObjects.RenderTexture,
         bubbleArrow: Phaser.GameObjects.Sprite,
         CharacterSprite: Phaser.GameObjects.Sprite,
-        verticalOffset: number) {
+        verticalOffset: number
+    ) {
         if (ChatInput && ChatInput.value !== "") {
             const newMessage = ChatInput.value.substring(0, 250); // Enforce max 250 characters
             bubbleText.setText(newMessage ?? "");
+
+            // Ensure the bubble and its components are visible
+            bubbleBody.setVisible(true);
+            bubbleArrow.setVisible(true);
+            bubbleText.setVisible(true);
 
             // Update bubble size and position based on new text
             this.updateBubbleSize(bubbleBody, bubbleArrow, bubbleText, CharacterSprite, verticalOffset);
 
             ChatInput.value = "";
+        } else {
+            // If empty string, hide the bubble
+            this.hideBubble(bubbleBody, bubbleArrow, bubbleText);
         }
+
+        // Hide the bubble after 3 seconds
+        this.scene.time.delayedCall(3000, () => {
+            this.hideBubble(bubbleBody, bubbleArrow, bubbleText);
+        });
+    }
+
+    hideBubble(bubbleBody: Phaser.GameObjects.RenderTexture, bubbleArrow: Phaser.GameObjects.Sprite, bubbleText: Phaser.GameObjects.Text) {
+        bubbleBody.setVisible(false);
+        bubbleArrow.setVisible(false);
+        bubbleText.setVisible(false);
     }
 
     updateBubbleSize(
@@ -122,5 +157,4 @@ export class SpeechBubble {
         // Reposition the arrow slightly above the bottom of the bubble
         bubbleArrow.setPosition(0, bubbleBody.y + newHeight / 2 - 5);
     }
-
 }
